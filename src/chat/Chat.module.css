@@ -1,0 +1,104 @@
+/* Add this CSS to your stylesheets or use a CSS-in-JS solution */
+
+.chat-container {
+  max-width: 400px;
+  margin: 20px auto;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.chat-header {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+
+.chat-messages {
+  overflow-y: auto;
+  max-height: 300px;
+  padding: 10px;
+}
+.new {
+  background-color: red;
+}
+.message {
+  display: flex;
+  /* align-items: flex-start; */
+  margin-bottom: 10px;
+  /* background-color: yellow; */
+}
+.user {
+  /* background-color: #000; */
+  margin-right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: #fff;
+}
+.user-icon {
+  background-color: green;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  /* margin-left: 10px; */
+}
+/* .user .user-icon {
+  margin-right: 10px;
+} */
+
+.bot-image {
+  /* background-color: pink; */
+  width: 14px;
+  height: 14px;
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.bot-icon {
+  margin-left: 10px;
+  background-color: pink;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  margin-right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* .bot .bot-icon {
+  margin-left: 10px;
+} */
+
+.message-text {
+  background-color: #f4f4f4;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.chat-input {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.chat-input button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Customize styles further as needed */
