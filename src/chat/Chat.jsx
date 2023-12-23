@@ -1,5 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import styles from "./Chat.module.css";
+import { firestore } from "../firebase";
+import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
 
 const Chat = () => {
   const [messages, setMessages] = useState([
@@ -11,13 +14,7 @@ const Chat = () => {
 
   const [newMessage, setNewMessage] = useState("");
   const messagesRef = useRef(null);
-
-  // Dummy data for illustration purposes
-  //   const dummyData = [
-  //     { id: 1, text: "Hello! How can I help you?", user: "bot" },
-  //     { id: 2, text: "Hi there!", user: "user" },
-  //     // Add more messages as needed
-  //   ];
+  const colletionRef = collection(firestore, "botly");
 
   useEffect(() => {
     // Set initial messages
@@ -105,15 +102,22 @@ const Chat = () => {
       }
       console.log("resonse:", responseData);
       const botResponse = responseData.bot;
-      // const unsubscribe = onSnapshot(
-      //   collection(db, "cities"),
-      //   (snapshot) => {
-      //     // ...
-      //   },
-      //   (error) => {
-      //     // ...
-      //   }
-      // );
+      const unsubscribe = onSnapshot(
+        collection(firestore, "botlty"),
+        (snapshot) => {
+          console.log(
+            "snapshot:",
+            snapshot.docs.map((doc) => doc.data())
+          );
+        },
+        (error) => {
+          console.log(error);
+          // ...
+        }
+      );
+      console.log("before snapshot execution");
+      unsubscribe();
+      console.log("after snapshot execution");
 
       const updatedMessages = [
         ...messages,
@@ -121,6 +125,18 @@ const Chat = () => {
         { id: messages.length + 2, text: botResponse, user: "bot" }, // Use a unique ID
       ];
 
+      const dbMessages = {
+        id: uuidv4(),
+        user: newMessage,
+        bot: botResponse,
+        createdAt: new Date().getTime(),
+      };
+      const messageDataRef = doc(colletionRef, dbMessages.id);
+      await setDoc(messageDataRef, dbMessages);
+
+      console.log("before snapshot execution");
+      unsubscribe();
+      console.log("after snapshot execution");
       setMessages(updatedMessages);
       setNewMessage("");
     } catch (error) {
@@ -128,6 +144,7 @@ const Chat = () => {
       // Handle error appropriately, e.g., show an error message to the user
     }
   };
+
   return (
     <div className={styles["chat-container"]}>
       {/* Chat Header */}
