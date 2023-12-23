@@ -5,9 +5,6 @@ import Chat from "./chat/Chat";
 const App = () => {
   return (
     <div>
-      <h1>Voicebook</h1>
-      {/* <Transcript /> */}
-      {/* <Chatbot /> */}
       <Chat />
     </div>
   );

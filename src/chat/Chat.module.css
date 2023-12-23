@@ -1,5 +1,4 @@
 /* Add this CSS to your stylesheets or use a CSS-in-JS solution */
-
 .chat-container {
   max-width: 400px;
   margin: 20px auto;
@@ -8,9 +7,42 @@
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+.tab {
+  background-color: var(--main-color-100);
+  padding: 2rem;
+  height: 1rem;
+  color: #fff;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.listen_btn {
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background-color: var(--main-color-100);
+  border: 0;
+  color: #fff;
+  border-radius: 0.3rem;
+}
+.voice_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.active {
+  background-color: #fff;
+  border-radius: 0.4rem;
+  padding: 0.5rem;
+  color: var(--main-color-100);
+}
 
 .chat-header {
-  background-color: #007bff;
+  background-color: var(--main-color-100);
   color: #fff;
   padding: 10px;
   text-align: center;
@@ -22,13 +54,17 @@
   padding: 10px;
 }
 .new {
-  background-color: red;
 }
 .message {
   display: flex;
+  flex-direction: column;
   /* align-items: flex-start; */
   margin-bottom: 10px;
   /* background-color: yellow; */
+}
+.bot-msg {
+  display: flex;
+  left: 0;
 }
 .user {
   /* background-color: #000; */
@@ -37,11 +73,19 @@
   align-items: center;
   justify-content: flex-end;
   color: #fff;
-}
-.user-icon {
   background-color: green;
   padding: 0.5rem 1rem;
   border-radius: 1rem;
+}
+.user-icon {
+  /* padding: 0.5rem 1rem;
+  border-radius: 1rem; */
+  margin-bottom: 0.5rem;
+  color: #fff;
+  display: flex;
+  /* align-items: center; */
+  justify-content: flex-end;
+  right: 0;
   /* margin-left: 10px; */
 }
 /* .user .user-icon {
@@ -50,8 +94,8 @@
 
 .bot-image {
   /* background-color: pink; */
-  width: 14px;
-  height: 14px;
+  width: 34px;
+  height: 34px;
   padding: 0.4rem;
   display: flex;
   align-items: center;

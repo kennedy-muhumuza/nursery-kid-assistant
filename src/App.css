@@ -51,6 +51,8 @@ body {
   --bg-color-200: #52b2bf;
   --bg-color-300: #00bfff;
 
+  --main-color-100: #007bff;
+
   --backdrop-color: rgba(255, 255, 255, 0.1);
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
