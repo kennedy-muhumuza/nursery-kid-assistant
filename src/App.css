@@ -52,6 +52,10 @@ body {
   --bg-color-300: #00bfff;
 
   --main-color-100: #007bff;
+  --main-color-100: #312e81;
+  --main-color-100: #6f00ff;
+  --user-msg: var(--main-color-100);
+  --bot-msg: #d1d5db;
 
   --backdrop-color: rgba(255, 255, 255, 0.1);
 

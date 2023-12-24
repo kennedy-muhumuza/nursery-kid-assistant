@@ -3,6 +3,9 @@ import styles from "./Chat.module.css";
 import { firestore } from "../firebase";
 import { FaMicrophoneLines } from "react-icons/fa6";
 import { FaMicrophoneLinesSlash } from "react-icons/fa6";
+import { PiTextOutdentBold } from "react-icons/pi";
+import { MdRecordVoiceOver } from "react-icons/md";
+import { IoMdSend } from "react-icons/io";
 
 import {
   collection,
@@ -19,7 +22,7 @@ const Chat = () => {
     { id: uuidv4(), bot: "Hello human! How can I help you today?", user: "" },
   ]);
   const [newMessage, setNewMessage] = useState("");
-  const messagesRef = useRef(null);
+  const messagesRef = useRef();
   const colletionRef = collection(firestore, "botly");
   const [transcript, setTranscript] = useState("");
   const [listening, setListening] = useState(false);
@@ -32,9 +35,6 @@ const Chat = () => {
     user: "",
   };
 
-  const handleActiveTabChange = (tab) => {
-    setActive(tab);
-  };
   const startListening = () => {
     recognition = new window.webkitSpeechRecognition();
     recognition.onstart = () => {
@@ -43,8 +43,10 @@ const Chat = () => {
 
     recognition.onresult = async (event) => {
       const last = event.results.length - 1;
-      console.log("starting");
-      const response = await fetch("http://127.0.0.1:8000/bot", {
+
+      setTranscript(event.results[last][0].transcript);
+
+      const response = await fetch("http://127.0.0.1:8000/botly", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +70,7 @@ const Chat = () => {
         bot: botResponse,
         createdAt: new Date().getTime(),
       };
-      setTranscript(event.results[last][0].transcript);
+      // setTranscript(event.results[last][0].transcript);
       const messageDataRef = doc(colletionRef, dbMessages.id);
       await setDoc(messageDataRef, dbMessages);
       const updatedMessages = [
@@ -146,7 +148,9 @@ const Chat = () => {
   }, [messages]);
 
   const scrollToBottom = () => {
-    messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    if (messagesRef.current) {
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    }
   };
 
   const handleInputChange = (e) => {
@@ -159,7 +163,7 @@ const Chat = () => {
 
     try {
       console.log("starting");
-      const response = await fetch("http://127.0.0.1:8000/bot", {
+      const response = await fetch("http://127.0.0.1:8000/botly", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -213,6 +217,33 @@ const Chat = () => {
     }
   };
 
+  const handleActiveTabChange = (tab) => {
+    setActive(tab);
+    scrollToBottom();
+  };
+
+  function convertIsoStringToCustomFormat(isoString) {
+    const inputDate = new Date(isoString);
+
+    if (isNaN(inputDate)) {
+      return;
+    }
+
+    let hours = inputDate.getHours();
+    let minutes = inputDate.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+
+    // Convert to 12-hour format
+    hours = hours % 12 || 12;
+
+    // Add leading zeros if needed
+    hours = hours < 10 ? "0" + hours : hours;
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+
+    const formattedTime = `${hours}:${minutes} ${ampm}`;
+    return formattedTime;
+  }
+
   return (
     <div className={styles["chat-container"]}>
       <div className={styles["tab"]}>
@@ -222,7 +253,8 @@ const Chat = () => {
           }`}
           onClick={() => handleActiveTabChange("voice")}
         >
-          Voiced input
+          <MdRecordVoiceOver />
+          <span> Voiced input</span>
         </span>
         <span
           className={`${styles["tab_option"]} ${
@@ -230,7 +262,8 @@ const Chat = () => {
           }`}
           onClick={() => handleActiveTabChange("text")}
         >
-          Text based
+          <span>Text based </span>
+          <PiTextOutdentBold />
         </span>
       </div>
       {active === "text" && (
@@ -239,17 +272,20 @@ const Chat = () => {
             {messages.map((message, index) => (
               <div
                 key={index}
+                ref={messagesRef}
                 className={`${styles["message"]} ${styles[`${message?.user}`]}`}
               >
                 {message?.user && (
                   <div className={styles["user-icon"]}>
                     {/* <span>👤</span>  */}
-                    <span></span>
-                    <span className={styles["user"]}>{message.user}</span>
+                    <span className={styles["user"]}>{message?.user}</span>
+                    <span className={styles["time-user"]}>
+                      {convertIsoStringToCustomFormat(message?.createdAt)}
+                    </span>
                   </div>
                 )}
-                {message?.bot ? (
-                  <div className={styles["bot-msg"]}>
+                {message?.bot && (
+                  <div className={styles["bot-container"]}>
                     <span className={styles["bot-image"]}>
                       <img
                         src={ai}
@@ -259,11 +295,14 @@ const Chat = () => {
                     </span>
                     {/* <span className={styles["bot-image"]}>🤖</span> */}
                     <div className={styles["bot-icon"]}>
-                      <span>{message.bot}</span>
+                      <span className={styles["bot-msg"]}>{message?.bot}</span>
+                      <span className={styles["time"]}>
+                        {convertIsoStringToCustomFormat(message?.createdAt)}
+                      </span>
                       {/* <span>{botResponse}</span> */}
                     </div>
                   </div>
-                ) : null}
+                )}
 
                 {/* <div className="message-text">{message.text}</div> */}
               </div>
@@ -277,8 +316,11 @@ const Chat = () => {
               placeholder="Type your message..."
               value={newMessage}
               onChange={handleInputChange}
+              className={styles["input_field"]}
             />
-            <button type="submit">Send</button>
+            <button type="submit">
+              <IoMdSend />
+            </button>
           </form>
         </>
       )}
@@ -294,12 +336,15 @@ const Chat = () => {
                 {message?.user && (
                   <div className={styles["user-icon"]}>
                     {/* <span>👤</span>  */}
-                    <span></span>
-                    <span className={styles["user"]}>{message.user}</span>
+                    {/* <span></span> */}
+                    <span className={styles["user"]}>{message?.user} </span>
+                    <span className={styles["time-user"]}>
+                      {convertIsoStringToCustomFormat(message?.createdAt)}
+                    </span>
                   </div>
                 )}
                 {message?.bot ? (
-                  <div className={styles["bot-msg"]}>
+                  <div className={styles["bot-container"]}>
                     <span className={styles["bot-image"]}>
                       <img
                         src={ai}
@@ -309,7 +354,10 @@ const Chat = () => {
                     </span>
                     {/* <span className={styles["bot-image"]}>🤖</span> */}
                     <div className={styles["bot-icon"]}>
-                      <span>{message.bot}</span>
+                      <span className={styles["bot-msg"]}>{message?.bot}</span>
+                      <span className={styles["time"]}>
+                        {convertIsoStringToCustomFormat(message?.createdAt)}
+                      </span>
                       {/* <span>{botResponse}</span> */}
                     </div>
                   </div>
@@ -329,7 +377,9 @@ const Chat = () => {
               </span>
               <span>{listening ? "Stop Listening" : "Start Listening"}</span>
             </button>
-            <p>Transcript: {transcript}</p>
+            <p>
+              <b>Transcript:</b> {transcript}
+            </p>
           </div>
         </>
       )}
