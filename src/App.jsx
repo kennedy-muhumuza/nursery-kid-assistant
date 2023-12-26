@@ -1,12 +1,33 @@
-import "./App.css";
-// import { Chatbot } from "./Chatbot/Chatbot";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Chat from "./chat/Chat";
+import "./App.css";
+import Layout from "./components/layout/Layout";
+import { Home } from "./components/home/Home";
+import { NoPage } from "./components/no_page/NoPage";
+import { Gallery } from "./components/gallery/Gallery";
+import { Videos } from "./components/videos/Videos";
+import { Landing } from "./components/landing/Landing";
+// import { Chatbot } from "./Chatbot/Chatbot";
 // import Transcript from "./Transcript/Transcript";
 const App = () => {
   return (
-    <div>
-      <Chat />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        {/* <Route path="/" element={<Videos />} /> */}
+        {/* <Route path="/" element={<Gallery />} /> */}
+
+        {/* <Route path="/" element={<Chat />} /> */}
+        <Route path="layout" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="home" element={<Home />} />
+          <Route path="chat" element={<Chat />} />
+          <Route path="videos" element={<Videos />} />
+          <Route path="gallery" element={<Gallery />} />
+          <Route path="*" element={<NoPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 };
 

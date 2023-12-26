@@ -1,0 +1,14 @@
+.home_container {
+  background-color: #f9fafb;
+  background-color: #e0f2fe;
+  background: linear-gradient(to right, #e0f2fe, #ffffff);
+  background: var(--main-color-100);
+}
+.bot-img {
+  display: block;
+  /* width: 100%; */
+  height: auto;
+  border: 1px solid #e0f2fe;
+  border: 5px solid rgba(224, 242, 254, 0.5);
+  filter: blur(1px);
+}

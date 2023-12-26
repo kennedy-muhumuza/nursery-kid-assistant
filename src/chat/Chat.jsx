@@ -19,7 +19,11 @@ import ai from "/aipic.jpg";
 
 const Chat = () => {
   const [messages, setMessages] = useState([
-    { id: uuidv4(), bot: "Hello human! How can I help you today?", user: "" },
+    {
+      id: uuidv4(),
+      bot: "Hello human! Botly, your one and only friendly assistant at your service",
+      user: "",
+    },
   ]);
   const [newMessage, setNewMessage] = useState("");
   const messagesRef = useRef();
@@ -31,7 +35,7 @@ const Chat = () => {
 
   const initialMessage = {
     id: uuidv4(),
-    bot: "Hello human! How can I help you today?",
+    bot: "Hello human! Botly, your one and only friendly assistant at your service",
     user: "",
   };
 

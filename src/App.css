@@ -1,5 +1,9 @@
 body {
   font-family: "Inter", sans-serif;
+  font-family: "Poppins", sans-serif;
+  height: 100vh;
+  margin: 0;
+  /* background-color: var(--main-color-100); */
 }
 :root {
   /* Indigo */
@@ -54,6 +58,8 @@ body {
   --main-color-100: #007bff;
   --main-color-100: #312e81;
   --main-color-100: #6f00ff;
+  --main-color-100: #14161b;
+  --main-color-100: #1f0954;
   --user-msg: var(--main-color-100);
   --bot-msg: #d1d5db;
 
