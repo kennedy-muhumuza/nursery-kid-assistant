@@ -103,6 +103,7 @@
   font-size: 25px;
   color: #fff;
   z-index: 7;
+  cursor: pointer;
 }
 .progress_dots {
   width: 100%;

@@ -23,7 +23,7 @@ const Chat = () => {
   const [messages, setMessages] = useState([
     {
       id: uuidv4(),
-      bot: "Hello human! Botly, your one and only friendly assistant at your service",
+      bot: "Hello human! Botly, your one and only friendly assistant at your service. I can do several things like playing music, telling you news updates, tell you the weather in any area you want, quickly surf the internet for you etc. Use me as you please",
       user: "",
     },
   ]);
@@ -38,7 +38,7 @@ const Chat = () => {
 
   const initialMessage = {
     id: uuidv4(),
-    bot: "Hello human! Botly, your one and only friendly assistant at your service",
+    bot: "Hello human! Botly, your one and only friendly assistant at your service. I can do several things like playing music, telling you news updates, tell you the weather in any area you want, quickly surf the internet for you etc. Use me as you please",
     user: "",
   };
 
@@ -53,7 +53,8 @@ const Chat = () => {
 
       setTranscript(event.results[last][0].transcript);
 
-      const response = await fetch("http://127.0.0.1:8000/botly", {
+      // const response = await fetch("http://127.0.0.1:8000/botly", {
+      const response = await fetch("https://botly-backend.onrender.com", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

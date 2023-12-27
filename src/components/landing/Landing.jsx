@@ -12,11 +12,17 @@ import { MdAutoStories } from "react-icons/md";
 import { MdFactCheck } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const Landing = () => {
   const [activeCard, setActiveCard] = useState("chat");
 
   const cards = ["chat", "internet", "friend", "math"];
+
+  const navigate = useNavigate();
+  const handleNavigate = () => {
+    navigate("/home");
+  };
 
   const handleDotClick = (card) => {
     setActiveCard(() => card);
@@ -78,7 +84,6 @@ export const Landing = () => {
               </ul>
             </span>
           )}
-
           {activeCard === "math" && (
             <span className={styles["slider_card"]}>
               <b className={styles["card_highlight"]}>
@@ -141,11 +146,13 @@ export const Landing = () => {
           </div>
         </div>
       </div>
-      <button className={styles["start_btn"]}>
+
+      <button className={styles["start_btn"]} onClick={handleNavigate}>
         <Link to="/home" className={styles["start_btn_link"]}>
           Get started
         </Link>
       </button>
+
       <span className={styles["bottom_border"]}></span>
     </div>
   );
