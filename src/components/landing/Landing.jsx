@@ -1,5 +1,5 @@
 import styles from "./Landing.module.css";
-import botly from "/bot-bg-remove.png";
+import botly from "/bot-no-bg.png";
 import { TiNews } from "react-icons/ti";
 import { FaUserFriends } from "react-icons/fa";
 import { FaBook } from "react-icons/fa6";
@@ -11,6 +11,7 @@ import { GiCardJoker } from "react-icons/gi";
 import { MdAutoStories } from "react-icons/md";
 import { MdFactCheck } from "react-icons/md";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 export const Landing = () => {
   const [activeCard, setActiveCard] = useState("chat");
@@ -140,7 +141,11 @@ export const Landing = () => {
           </div>
         </div>
       </div>
-      <button className={styles["start_btn"]}>Get started</button>
+      <button className={styles["start_btn"]}>
+        <Link to="home" className={styles["start_btn_link"]}>
+          Get started
+        </Link>
+      </button>
       <span className={styles["bottom_border"]}></span>
     </div>
   );

@@ -2,8 +2,8 @@ body {
   font-family: "Inter", sans-serif;
   font-family: "Poppins", sans-serif;
   height: 100vh;
-  margin: 0;
   /* background-color: var(--main-color-100); */
+  margin: 0;
 }
 :root {
   /* Indigo */

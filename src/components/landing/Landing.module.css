@@ -158,3 +158,11 @@
   background-color: #fff;
   border-radius: 15px;
 }
+.start_btn_link {
+  color: #fff;
+  text-decoration: none;
+}
+.start_btn_link:visited {
+  color: #fff;
+  text-decoration: none;
+}
