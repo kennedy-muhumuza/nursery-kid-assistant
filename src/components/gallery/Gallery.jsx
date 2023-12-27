@@ -3,9 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import bot from "/aipic.jpg";
 
 export const Gallery = () => {
   const [activeImage, setActiveImage] = useState("img/bg1.jpg");
+  const [isDropdownVisible, setDropdownVisible] = useState(false);
+
   const image = [
     "img/bg1.jpg",
     "img/bg2.jpg",
@@ -40,6 +44,12 @@ export const Gallery = () => {
   ];
 
   const index = image.indexOf(activeImage);
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    // Navigate to the 'about' route
+    navigate("/home");
+  };
 
   const handleNext = () => {
     const next = (index + 1) % image.length;
@@ -63,8 +73,41 @@ export const Gallery = () => {
   }, [activeImage, image]);
   return (
     <>
+      <section className={styles["home_header"]}>
+        <span className={styles["header_img_container"]}>
+          <img src={bot} className={styles["header_bot_img"]} />
+          <p className={styles["welcome_msg"]}>
+            Welcome back,
+            <br /> <b className={styles["highlight"]}>Botly Friend</b>
+          </p>
+        </span>
+        <span
+          className={styles["options_container"]}
+          onClick={() => setDropdownVisible(!isDropdownVisible)}
+        >
+          <span className={styles["option_dot"]}></span>
+          <span className={styles["option_dot"]}></span>
+          <span className={styles["option_dot"]}></span>
+        </span>
+        {isDropdownVisible && (
+          <div className={styles["dropdown-content"]}>
+            <Link to="/home">
+              <span className={styles["dropdown-link"]}>Home</span>
+            </Link>
+            <Link to="/gallery">
+              <span className={styles["dropdown-link"]}>Family Gallery</span>
+            </Link>
+            <Link to="/videos">
+              <span className={styles["dropdown-link"]}>Anime Videos</span>
+            </Link>
+            <Link to="/chat">
+              <span className={styles["dropdown-link"]}>Botly Chat</span>
+            </Link>
+          </div>
+        )}
+      </section>
       <div className={styles["container"]}>
-        <div className={styles["background"]}>
+        <div className={styles["background"]} onClick={handleClick}>
           <img
             src={activeImage}
             className={`${styles["bg"]} ${styles["show"]}`}

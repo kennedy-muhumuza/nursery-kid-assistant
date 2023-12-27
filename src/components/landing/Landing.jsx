@@ -142,7 +142,7 @@ export const Landing = () => {
         </div>
       </div>
       <button className={styles["start_btn"]}>
-        <Link to="home" className={styles["start_btn_link"]}>
+        <Link to="/home" className={styles["start_btn_link"]}>
           Get started
         </Link>
       </button>

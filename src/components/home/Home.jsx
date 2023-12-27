@@ -28,16 +28,16 @@ export const Home = () => {
         </span>
         {isDropdownVisible && (
           <div className={styles["dropdown-content"]}>
-            <Link to="/">
+            <Link to="/home">
               <span className={styles["dropdown-link"]}>Home</span>
             </Link>
-            <Link to="gallery">
+            <Link to="/gallery">
               <span className={styles["dropdown-link"]}>Family Gallery</span>
             </Link>
-            <Link to="videos">
+            <Link to="/videos">
               <span className={styles["dropdown-link"]}>Anime Videos</span>
             </Link>
-            <Link to="chat">
+            <Link to="/chat">
               <span className={styles["dropdown-link"]}>Botly Chat</span>
             </Link>
           </div>
@@ -51,7 +51,7 @@ export const Home = () => {
               Begin your exciting journey of chatting with and even commanding
               Botly, your AI assistant. Dedicated to Noble.
             </p>
-            <Link to="chat">
+            <Link to="/chat">
               <button className={styles["start_btn"]}>Get Started</button>
             </Link>
           </div>
@@ -115,7 +115,7 @@ export const Home = () => {
                 Chat with Botly, an AI assistant that responds both with words
                 and action
               </p>
-              <Link to="chat" className={styles["all_link"]}>
+              <Link to="/chat" className={styles["all_link"]}>
                 Click here
               </Link>
             </div>
@@ -136,7 +136,7 @@ export const Home = () => {
                 Explore an interesting collection of Kenny&apos;s lousy moments,
                 Noble, Timothy, Mummy and Vanny
               </p>
-              <Link to="gallery" className={styles["all_link"]}>
+              <Link to="/gallery" className={styles["all_link"]}>
                 Click here
               </Link>
             </div>
@@ -158,7 +158,7 @@ export const Home = () => {
                 learning for the kid so much fun. First Click plays video while
                 second click on same video cancels it.
               </p>
-              <Link to="videos" className={styles["all_link"]}>
+              <Link to="/videos" className={styles["all_link"]}>
                 Click here
               </Link>
             </div>
@@ -179,7 +179,7 @@ export const Home = () => {
                 games both for kids and adults as well as advancing Botly&apos;s
                 AI capabilities still further.
               </p>
-              <Link to="videos" className={styles["all_link"]}>
+              <Link to="/videos" className={styles["all_link"]}>
                 Click here
               </Link>
             </div>
@@ -203,7 +203,7 @@ export const Home = () => {
               Explore an interesting collection of Kenny&apos;s lousy moments,
               Noble, Timothy, Mummy and Vanny
             </p>
-            <Link to="gallery" className={styles["all_link"]}>
+            <Link to="/gallery" className={styles["all_link"]}>
               Click here
             </Link>
           </div>
@@ -227,7 +227,7 @@ export const Home = () => {
               for the kid so much fun. First Click plays video while second
               click on same video cancels it.
             </p>
-            <Link to="videos" className={styles["all_link"]}>
+            <Link to="/videos" className={styles["all_link"]}>
               Click here
             </Link>
           </div>
@@ -250,7 +250,7 @@ export const Home = () => {
               Chat with Botly, an AI assistant that responds both with words and
               action
             </p>
-            <Link to="chat" className={styles["all_link"]}>
+            <Link to="/chat" className={styles["all_link"]}>
               Click here
             </Link>
           </div>

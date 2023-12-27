@@ -6,6 +6,7 @@ import { FaMicrophoneLinesSlash } from "react-icons/fa6";
 import { PiTextOutdentBold } from "react-icons/pi";
 import { MdRecordVoiceOver } from "react-icons/md";
 import { IoMdSend } from "react-icons/io";
+import bot from "/aipic.jpg";
 
 import {
   collection,
@@ -16,6 +17,7 @@ import {
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import ai from "/aipic.jpg";
+import { Link } from "react-router-dom";
 
 const Chat = () => {
   const [messages, setMessages] = useState([
@@ -25,6 +27,7 @@ const Chat = () => {
       user: "",
     },
   ]);
+  const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const messagesRef = useRef();
   const colletionRef = collection(firestore, "botly");
@@ -250,6 +253,39 @@ const Chat = () => {
 
   return (
     <div className={styles["chat-container"]}>
+      <section className={styles["home_header"]}>
+        <span className={styles["header_img_container"]}>
+          <img src={bot} className={styles["header_bot_img"]} />
+          <p className={styles["welcome_msg"]}>
+            Welcome back,
+            <br /> <b className={styles["highlight"]}>Botly Friend</b>
+          </p>
+        </span>
+        <span
+          className={styles["options_container"]}
+          onClick={() => setDropdownVisible(!isDropdownVisible)}
+        >
+          <span className={styles["option_dot"]}></span>
+          <span className={styles["option_dot"]}></span>
+          <span className={styles["option_dot"]}></span>
+        </span>
+        {isDropdownVisible && (
+          <div className={styles["dropdown-content"]}>
+            <Link to="/home">
+              <span className={styles["dropdown-link"]}>Home</span>
+            </Link>
+            <Link to="/gallery">
+              <span className={styles["dropdown-link"]}>Family Gallery</span>
+            </Link>
+            <Link to="/videos">
+              <span className={styles["dropdown-link"]}>Anime Videos</span>
+            </Link>
+            <Link to="/chat">
+              <span className={styles["dropdown-link"]}>Botly Chat</span>
+            </Link>
+          </div>
+        )}
+      </section>
       <div className={styles["tab"]}>
         <span
           className={`${styles["tab_option"]} ${
@@ -258,7 +294,7 @@ const Chat = () => {
           onClick={() => handleActiveTabChange("voice")}
         >
           <MdRecordVoiceOver />
-          <span> Voiced input</span>
+          <span> Voiced </span>
         </span>
         <span
           className={`${styles["tab_option"]} ${
@@ -266,7 +302,7 @@ const Chat = () => {
           }`}
           onClick={() => handleActiveTabChange("text")}
         >
-          <span>Text based </span>
+          <span>Text </span>
           <PiTextOutdentBold />
         </span>
       </div>
