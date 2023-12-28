@@ -215,12 +215,13 @@
   padding: 1rem;
 }
 .dropdown-content {
-  padding-top: 1rem 2rem;
+  padding: 2rem 0.5rem;
   height: auto;
   display: flex;
   flex-direction: column;
   position: absolute;
-  padding-top: 0.5rem;
+  padding-top: 1rem;
+  padding-bottom: 0.7rem;
   top: 80%;
   right: 5px;
   background-color: #f9f9f9;
@@ -230,7 +231,7 @@
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   border-radius: 5px;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 .dropdown-link {
   padding: 5px 7px;
