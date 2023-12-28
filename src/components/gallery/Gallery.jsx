@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import bot from "/aipic.jpg";
 
 export const Gallery = () => {
@@ -46,11 +46,6 @@ export const Gallery = () => {
   const index = image.indexOf(activeImage);
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    // Navigate to the 'about' route
-    navigate("/home");
-  };
-
   const handleNext = () => {
     const next = (index + 1) % image.length;
     setActiveImage(image[next]);
@@ -91,23 +86,59 @@ export const Gallery = () => {
         </span>
         {isDropdownVisible && (
           <div className={styles["dropdown-content"]}>
-            <Link to="/home">
-              <span className={styles["dropdown-link"]}>Home</span>
-            </Link>
-            <Link to="/gallery">
-              <span className={styles["dropdown-link"]}>Family Gallery</span>
-            </Link>
-            <Link to="/videos">
-              <span className={styles["dropdown-link"]}>Anime Videos</span>
-            </Link>
-            <Link to="/chat">
-              <span className={styles["dropdown-link"]}>Botly Chat</span>
-            </Link>
+            <span
+              className={styles["dropdown-link"]}
+              onClick={() => navigate("/home")}
+            >
+              <svg
+                viewBox="0 0 1024 1024"
+                fill="currentColor"
+                height="1em"
+                width="1em"
+              >
+                <path d="M946.5 505L534.6 93.4a31.93 31.93 0 00-45.2 0L77.5 505c-12 12-18.8 28.3-18.8 45.3 0 35.3 28.7 64 64 64h43.4V908c0 17.7 14.3 32 32 32H448V716h112v224h265.9c17.7 0 32-14.3 32-32V614.3h43.4c17 0 33.3-6.7 45.3-18.8 24.9-25 24.9-65.5-.1-90.5z" />
+              </svg>
+              <span>Home</span>
+            </span>
+
+            <span
+              className={styles["dropdown-link"]}
+              onClick={() => navigate("/videos")}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                height="1em"
+                width="1em"
+              >
+                <path d="M4 8H2v12a2 2 0 002 2h12v-2H4z" />
+                <path d="M20 2H8a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2zm-9 12V6l7 4z" />
+              </svg>
+              <span>Noble&apos;s Videos</span>
+            </span>
+
+            <span
+              className={styles["dropdown-link"]}
+              onClick={() => navigate("/chat")}
+            >
+              <svg
+                viewBox="0 0 640 512"
+                fill="currentColor"
+                height="1em"
+                width="1em"
+              >
+                <path d="M320 0c17.7 0 32 14.3 32 32v64h128c35.3 0 64 28.7 64 64v288c0 35.3-28.7 64-64 64H160c-35.3 0-64-28.7-64-64V160c0-35.3 28.7-64 64-64h128V32c0-17.7 14.3-32 32-32zM208 384c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16h-32zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16h-32zm96 0c-8.8 0-16 7.2-16 16s7.2 16 16 16h32c8.8 0 16-7.2 16-16s-7.2-16-16-16h-32zM264 256c0-22.1-17.9-40-40-40s-40 17.9-40 40 17.9 40 40 40 40-17.9 40-40zm152 40c22.1 0 40-17.9 40-40s-17.9-40-40-40-40 17.9-40 40 17.9 40 40 40zM48 224h16v192H48c-26.5 0-48-21.5-48-48v-96c0-26.5 21.5-48 48-48zm544 0c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48h-16V224h16z" />
+              </svg>
+              <span>Botly Chat</span>
+            </span>
           </div>
         )}
       </section>
-      <div className={styles["container"]}>
-        <div className={styles["background"]} onClick={handleClick}>
+      <div
+        className={styles["container"]}
+        onClick={() => setDropdownVisible(false)}
+      >
+        <div className={styles["background"]}>
           <img
             src={activeImage}
             className={`${styles["bg"]} ${styles["show"]}`}

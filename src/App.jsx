@@ -9,6 +9,7 @@ import { Landing } from "./components/landing/Landing";
 
 // import { Chatbot } from "./Chatbot/Chatbot";
 // import Transcript from "./Transcript/Transcript";
+// netlify deploy --prod
 const App = () => {
   return (
     <BrowserRouter>

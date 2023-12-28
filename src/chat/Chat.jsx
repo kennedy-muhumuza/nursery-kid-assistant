@@ -7,6 +7,7 @@ import { PiTextOutdentBold } from "react-icons/pi";
 import { MdRecordVoiceOver } from "react-icons/md";
 import { IoMdSend } from "react-icons/io";
 import bot from "/aipic.jpg";
+import { useNavigate } from "react-router-dom";
 
 import {
   collection,
@@ -34,6 +35,8 @@ const Chat = () => {
   const [transcript, setTranscript] = useState("");
   const [listening, setListening] = useState(false);
   const [active, setActive] = useState("voice");
+
+  const navigate = useNavigate();
   let recognition;
 
   const initialMessage = {
@@ -53,8 +56,8 @@ const Chat = () => {
 
       setTranscript(event.results[last][0].transcript);
 
-      // const response = await fetch("http://127.0.0.1:8000/botly", {
-      const response = await fetch("https://botly-backend.onrender.com", {
+      const response = await fetch("http://127.0.0.1:8000/botly", {
+        // const response = await fetch("https://botly-backend.onrender.com", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -272,18 +275,52 @@ const Chat = () => {
         </span>
         {isDropdownVisible && (
           <div className={styles["dropdown-content"]}>
-            <Link to="/home">
-              <span className={styles["dropdown-link"]}>Home</span>
-            </Link>
-            <Link to="/gallery">
-              <span className={styles["dropdown-link"]}>Family Gallery</span>
-            </Link>
-            <Link to="/videos">
-              <span className={styles["dropdown-link"]}>Anime Videos</span>
-            </Link>
-            <Link to="/chat">
-              <span className={styles["dropdown-link"]}>Botly Chat</span>
-            </Link>
+            <span
+              className={styles["dropdown-link"]}
+              onClick={() => navigate("/home")}
+            >
+              <svg
+                viewBox="0 0 1024 1024"
+                fill="currentColor"
+                height="1em"
+                width="1em"
+              >
+                <path d="M946.5 505L534.6 93.4a31.93 31.93 0 00-45.2 0L77.5 505c-12 12-18.8 28.3-18.8 45.3 0 35.3 28.7 64 64 64h43.4V908c0 17.7 14.3 32 32 32H448V716h112v224h265.9c17.7 0 32-14.3 32-32V614.3h43.4c17 0 33.3-6.7 45.3-18.8 24.9-25 24.9-65.5-.1-90.5z" />
+              </svg>
+              <span>Home</span>
+            </span>
+
+            <span
+              className={styles["dropdown-link"]}
+              onClick={() => navigate("/gallery")}
+            >
+              <svg
+                viewBox="0 0 512 512"
+                fill="currentColor"
+                height="1em"
+                width="1em"
+              >
+                <path d="M450.29 112H142c-34 0-62 27.51-62 61.33v245.34c0 33.82 28 61.33 62 61.33h308c34 0 62-26.18 62-60V173.33c0-33.82-27.68-61.33-61.71-61.33zm-77.15 61.34a46 46 0 11-46.28 46 46.19 46.19 0 0146.28-46.01zm-231.55 276c-17 0-29.86-13.75-29.86-30.66v-64.83l90.46-80.79a46.54 46.54 0 0163.44 1.83L328.27 337l-113 112.33zM480 418.67a30.67 30.67 0 01-30.71 30.66H259L376.08 333a46.24 46.24 0 0159.44-.16L480 370.59z" />
+                <path d="M384 32H64A64 64 0 000 96v256a64.11 64.11 0 0048 62V152a72 72 0 0172-72h326a64.11 64.11 0 00-62-48z" />
+              </svg>
+              <span>Family Gallery</span>
+            </span>
+
+            <span
+              className={styles["dropdown-link"]}
+              onClick={() => navigate("/videos")}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                height="1em"
+                width="1em"
+              >
+                <path d="M4 8H2v12a2 2 0 002 2h12v-2H4z" />
+                <path d="M20 2H8a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2zm-9 12V6l7 4z" />
+              </svg>
+              <span>Noble&apos;s Videos</span>
+            </span>
           </div>
         )}
       </section>
@@ -309,7 +346,11 @@ const Chat = () => {
       </div>
       {active === "text" && (
         <>
-          <div className={styles["chat-messages"]} ref={messagesRef}>
+          <div
+            className={styles["chat-messages"]}
+            ref={messagesRef}
+            onClick={() => setDropdownVisible(false)}
+          >
             {messages.map((message, index) => (
               <div
                 key={index}
@@ -368,7 +409,11 @@ const Chat = () => {
 
       {active === "voice" && (
         <>
-          <div className={styles["chat-messages"]} ref={messagesRef}>
+          <div
+            className={styles["chat-messages"]}
+            ref={messagesRef}
+            onClick={() => setDropdownVisible(false)}
+          >
             {messages.map((message, index) => (
               <div
                 key={index}
