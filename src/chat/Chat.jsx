@@ -249,9 +249,9 @@ const Chat = () => {
   }
 
   // Example usage:
-  const userInput = "tell me something specific about Emmanuella";
-  const response = calculateResponse(userInput);
-  console.log(response);
+  // const userInput = "tell me something specific about Emmanuella";
+  // const response = calculateResponse(userInput);
+  // console.log(response);
   // function talk(response) {
   //   // Check for Speech Synthesis support
   //   if ("speechSynthesis" in window) {
@@ -476,6 +476,7 @@ const Chat = () => {
         "interprete",
         "elaborate",
         "who is",
+        "who are",
         "what is",
         "what are",
         "where is",
@@ -501,6 +502,8 @@ const Chat = () => {
         "demonstrate",
       ];
       const forbiddenWords = [
+        "date",
+        "today",
         "name",
         "you",
         "me",
@@ -575,26 +578,29 @@ const Chat = () => {
           event.results[last][0].transcript.includes(keyword)
         )
       ) {
-        const news = getNews();
-        talk(news);
-        const dbMessages = {
-          id: uuidv4(),
-          user: event.results[last][0].transcript,
-          bot: news,
-          createdAt: new Date().getTime(),
-        };
-        const messageDataRef = doc(colletionRef, dbMessages.id);
-        await setDoc(messageDataRef, dbMessages);
-        const updatedMessages = [
-          ...messages,
-          {
-            id: uuidv4(),
-            bot: news,
-            user: event.results[last][0].transcript,
-          },
-        ];
+        // const news = getNews();
 
-        setMessages(updatedMessages);
+        talk(
+          "Sorry dear, am not yet able to tell you any news updates for now. But soon I shall be able to."
+        );
+        // const dbMessages = {
+        //   id: uuidv4(),
+        //   user: event.results[last][0].transcript,
+        //   bot: news,
+        //   createdAt: new Date().getTime(),
+        // };
+        // const messageDataRef = doc(colletionRef, dbMessages.id);
+        // await setDoc(messageDataRef, dbMessages);
+        // const updatedMessages = [
+        //   ...messages,
+        //   {
+        //     id: uuidv4(),
+        //     bot: news,
+        //     user: event.results[last][0].transcript,
+        //   },
+        // ];
+
+        // setMessages(updatedMessages);
         return;
       }
 
@@ -879,6 +885,7 @@ const Chat = () => {
         "interprete",
         "elaborate",
         "who is",
+        "who are",
         "what is",
         "what are",
         "where is",
@@ -907,6 +914,9 @@ const Chat = () => {
         "name",
         "you",
         "me",
+        "time",
+        "date",
+        "today",
         "my",
         "sister",
         "kennedy",
@@ -967,26 +977,29 @@ const Chat = () => {
           newMessage.includes(keyword)
         )
       ) {
-        const news = getNews();
-        talk(news);
-        const dbMessages = {
-          id: uuidv4(),
-          user: newMessage,
-          bot: news,
-          createdAt: new Date().getTime(),
-        };
-        const messageDataRef = doc(colletionRef, dbMessages.id);
-        await setDoc(messageDataRef, dbMessages);
-        const updatedMessages = [
-          ...messages,
-          {
-            id: uuidv4(),
-            bot: news,
-            user: newMessage,
-          },
-        ];
+        // const news = getNews();
+        // talk(news);
+        talk(
+          "Sorry dear, am not yet able to tell you any news updates for now. But soon I shall be able to."
+        );
+        // const dbMessages = {
+        //   id: uuidv4(),
+        //   user: newMessage,
+        //   bot: news,
+        //   createdAt: new Date().getTime(),
+        // };
+        // const messageDataRef = doc(colletionRef, dbMessages.id);
+        // await setDoc(messageDataRef, dbMessages);
+        // const updatedMessages = [
+        //   ...messages,
+        //   {
+        //     id: uuidv4(),
+        //     bot: news,
+        //     user: newMessage,
+        //   },
+        // ];
 
-        setMessages(updatedMessages);
+        // setMessages(updatedMessages);
         return;
       }
 
