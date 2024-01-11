@@ -1,3 +1,5 @@
+/* global SpeechSynthesisUtterance */
+/* global window, speechSynthesis */
 import { useState, useRef, useEffect } from "react";
 import styles from "./Chat.module.css";
 import { firestore } from "../firebase";
@@ -8,6 +10,8 @@ import { MdRecordVoiceOver } from "react-icons/md";
 import { IoMdSend } from "react-icons/io";
 import bot from "/aipic.jpg";
 import { useNavigate } from "react-router-dom";
+import { botJsonData } from "../data/bot_json_data";
+// import YouTube from "react-youtube";
 
 import {
   collection,
@@ -18,7 +22,6 @@ import {
 } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import ai from "/aipic.jpg";
-import { Link } from "react-router-dom";
 
 const Chat = () => {
   const [messages, setMessages] = useState([
@@ -36,13 +39,372 @@ const Chat = () => {
   const [listening, setListening] = useState(false);
   const [active, setActive] = useState("voice");
 
+  const extractCity = (command) => {
+    const locationKeywords = ["in", "at", "for"];
+
+    for (const keyword of locationKeywords) {
+      const pattern = new RegExp(`${keyword}\\s(\\w+)`, "i");
+      const match = command.match(pattern);
+
+      if (match) {
+        return match[1];
+      }
+    }
+
+    return "kampala"; // Default city if no match is found
+  };
+  const newsCategories = [
+    "business",
+    "entertainment",
+    "health",
+    "science",
+    "sports",
+    "technology",
+    "general",
+    "politics",
+    "world",
+    "music",
+    "environment",
+    "education",
+    "travel",
+    "food",
+    "finance",
+    "technology",
+    "arts",
+    "fashion",
+    "lifestyle",
+  ];
+
+  const getRandomCategory = () => {
+    return newsCategories[Math.floor(Math.random() * newsCategories.length)];
+  };
+
+  const getNews = async () => {
+    const apiKey = "ea3019bd02c14cb6af4fa27dbc9ea6b0";
+
+    for (let i = 0; i < newsCategories.length; i++) {
+      const selectedCategory = getRandomCategory();
+      const response = await fetch(
+        `https://newsapi.org/v2/top-headlines?country=us&category=${selectedCategory}&apiKey=${apiKey}`
+      );
+      const newsData = await response.json();
+
+      if (newsData.articles.length > 0) {
+        const firstArticle = newsData.articles[0];
+        const title = firstArticle.title || "N/A";
+        const description =
+          firstArticle.description || "No description available";
+        const source = firstArticle.source?.name || "Unknown Source";
+
+        const textResponse = `The Latest news is as follows: ${
+          selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)
+        } News:\nTitle: ${title}\nDescription: ${description}\nSource: ${source}`;
+
+        talk(textResponse);
+        return textResponse;
+      } else {
+        console.log(
+          `Oops, nothing in ${selectedCategory}. Let me try another category.`
+        );
+        talk(
+          `Oops, nothing in ${selectedCategory}. Let me try another category.`
+        );
+        getNews();
+      }
+    }
+  };
+
+  const getWeather = async (city) => {
+    const API_KEY = "349c27f24aeee03e34affd43ad60e8ce";
+    const BASE_URL = "http://api.openweathermap.org/data/2.5/weather";
+
+    const queryParams = new URLSearchParams({
+      q: city,
+      appid: API_KEY,
+    });
+
+    const url = `${BASE_URL}?${queryParams}`;
+
+    try {
+      const response = await fetch(url);
+
+      if (response.ok) {
+        const weatherData = await response.json();
+        return weatherData;
+      } else {
+        console.error("Error fetching weather data:", response.statusText);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching weather data:", error.message);
+      return null;
+    }
+  };
+
   const navigate = useNavigate();
   let recognition;
 
+  // Create a new SpeechSynthesisUtterance object outside the function
+  var msg = new SpeechSynthesisUtterance();
+
+  // Listen for the voiceschanged event before fetching voices
+  speechSynthesis.onvoiceschanged = function () {
+    // Get the list of available voices
+    var voices = window.speechSynthesis.getVoices();
+
+    // Select a desired voice (you can customize this part)
+    var desiredVoice = voices.find(
+      (voice) => voice.voiceURI === "Google US English"
+    );
+
+    // Set the selected voice
+    msg.voice = desiredVoice;
+  };
+
+  function randomString() {
+    const randomList = [
+      "Oops, seems I lost track of what you just said. Please rephrase",
+      "Oh! It appears you spoke something I don't understand yet. Do you mind rephrasing",
+      "Do you mind trying to rephrase that? It seems am yet to learn about that",
+      "Sorry dear, I think I missed that. But am on my way to doing much better than this.",
+      "I'm terribly sorry dear, I didn't quite catch that. But dont worry, I will soon be much better than this.",
+      "Am sorry dear, can't answer that yet, but am looking forward to perfection. I promise!",
+    ];
+
+    const listCount = randomList.length;
+    const randomItem = Math.floor(Math.random() * listCount);
+
+    return randomList[randomItem];
+  }
+
+  // function extractUserName(inputString) {
+  //   const namePattern =
+  //     /(?i)(?:I\s+am\s+called|My\s+name\s+is)\s+([^\s.,;?!]+)/;
+  //   const match = inputString.match(namePattern);
+  //   return match ? match[1] : null;
+  // }
+  function extractUserName(inputString) {
+    const namePattern = /(?:I\s+am\s+called|My\s+name\s+is)\s+([^\s.,;?!]+)/i;
+    const match = inputString.match(namePattern);
+    return match ? match[1] : null;
+  }
+
+  function calculateResponse(inputString) {
+    const splitMessage = inputString.toLowerCase().split(/\s+|[,;?!.-]\s*/);
+    const scoreList = [];
+
+    const userName = extractUserName(inputString);
+
+    if (userName) {
+      const randomResponses = [
+        `Hey ${userName}! Nice to hear from you. I am Botly by the way`,
+        `Wow, I like your name ${userName}! Did your grandmother give it to you?`,
+        `It feels nice to know you ${userName}! How are you?`,
+        `You have a nice name ${userName}! I wish we could shake hands but sadly, I am yet to have some`,
+        `Great knowing you ${userName}! I am Botly by the way.`,
+      ];
+
+      const listCount = randomResponses.length;
+      const randomItem = Math.floor(Math.random() * listCount);
+
+      return randomResponses[randomItem];
+    }
+
+    for (const response of botJsonData) {
+      let responseScore = 0;
+      let requiredScore = 0;
+      const requiredWords = response.required_words;
+
+      if (requiredWords.length > 0) {
+        for (const word of splitMessage) {
+          if (requiredWords.includes(word)) {
+            requiredScore += 1;
+          }
+        }
+      }
+
+      if (requiredScore === requiredWords.length) {
+        for (const word of splitMessage) {
+          if (response.user_input.includes(word)) {
+            responseScore += 1;
+          }
+        }
+      }
+
+      scoreList.push(responseScore);
+    }
+
+    const bestResponse = Math.max(...scoreList, 0);
+    if (bestResponse !== 0) {
+      const responseIndex = scoreList.indexOf(bestResponse);
+      const possibleResponses = botJsonData[responseIndex].bot_response;
+
+      const listCount = possibleResponses.length;
+      const randomItem = Math.floor(Math.random() * listCount);
+      const selectedResponse = possibleResponses[randomItem];
+      return selectedResponse;
+    }
+
+    return randomString();
+  }
+
+  // Example usage:
+  const userInput = "tell me something specific about Emmanuella";
+  const response = calculateResponse(userInput);
+  console.log(response);
+  // function talk(response) {
+  //   // Check for Speech Synthesis support
+  //   if ("speechSynthesis" in window) {
+  //     // Set the text to be spoken
+  //     msg.text = response;
+
+  //     // Use the speech synthesis API to speak the text
+  //     speechSynthesis.speak(msg);
+  //   } else {
+  //     console.error("Speech synthesis not supported in this browser.");
+  //   }
+  // }
+  const talk = (response, onComplete) => {
+    // Check for Speech Synthesis support
+    if ("speechSynthesis" in window) {
+      // var msg = new SpeechSynthesisUtterance();
+      msg.text = response;
+
+      // Listen for the end event before executing the callback
+      msg.onend = () => {
+        if (onComplete && typeof onComplete === "function") {
+          onComplete();
+        }
+      };
+
+      speechSynthesis.speak(msg);
+    } else {
+      console.error("Speech synthesis not supported in this browser.");
+    }
+  };
   const initialMessage = {
     id: uuidv4(),
     bot: "Hello human! Botly, your one and only friendly assistant at your service. I can do several things like playing music, telling you news updates, tell you the weather in any area you want, quickly surf the internet for you etc. Use me as you please",
     user: "",
+  };
+
+  const getTime = () => {
+    const currentTime = new Date();
+    const formattedTime = currentTime.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    return formattedTime;
+  };
+
+  const getDate = () => {
+    const currentDate = new Date();
+    const formattedDate = currentDate.toLocaleDateString();
+
+    return formattedDate;
+  };
+
+  const randomStrings = [
+    "Okay, let me search it out.",
+    "Let me quickly find you internet results",
+    "Searching for answers...",
+    "Let me find that for you.",
+    "On it! Fetching results.",
+    "Scouring the web for info.",
+    "Hold tight, searching in progress.",
+    "Time to seek and find.",
+    "Searching the web's archives.",
+    "Finding answers, one click at a time.",
+  ];
+
+  const resultStrings = [
+    "Okay, here we go!",
+    "Alright!",
+    "Got it!",
+    "Perfect!",
+    "Great, here's what I found.",
+    "Ta-da! Here are the results.",
+    "Voila! Information at your fingertips.",
+    "Excellent! Check this out.",
+    "Awesome! Here's what I discovered.",
+    "Fantastic! Take a look at these results.",
+  ];
+  function getRandomResultString() {
+    const randomIndex = Math.floor(Math.random() * resultStrings.length);
+    return resultStrings[randomIndex];
+  }
+  function getRandomString() {
+    const randomIndex = Math.floor(Math.random() * randomStrings.length);
+    return randomStrings[randomIndex];
+  }
+
+  const searchWikiPedia = async (transcript) => {
+    try {
+      if (transcript) {
+        console.log("Transcript:", transcript);
+        const searchResponse = await fetch(
+          `https://en.wikipedia.org/w/api.php?action=query&format=json&list=search&utf8=1&srsearch=${encodeURIComponent(
+            transcript
+          )}&origin=*`
+        );
+        const searchData = await searchResponse.json();
+
+        if (searchResponse.ok && searchData.query.search.length > 0) {
+          const mostRelevantTitle = searchData.query.search[0].title;
+
+          const response = await fetch(
+            `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&exintro&titles=${encodeURIComponent(
+              mostRelevantTitle
+            )}&origin=*`
+          );
+
+          const data = await response.json();
+
+          if (response.ok) {
+            const pages = data.query.pages;
+
+            if (Object.keys(pages).length > 0) {
+              const pageId = Object.keys(pages)[0];
+              const pageData = pages[pageId];
+
+              if ("missing" in pageData) {
+                console.error("No information found for the given title.");
+                talk("Sorry, no information found.");
+              } else {
+                const info = pageData.extract;
+
+                if (info) {
+                  const selectedString = getRandomString();
+                  talk(selectedString);
+                  const selectedResultString = getRandomResultString();
+                  talk(`${selectedResultString} ${info}`);
+                } else {
+                  console.error("No information found:", data);
+                  talk("Sorry, no information found.");
+                }
+              }
+            } else {
+              console.error("No information found for the given title.");
+              talk("Sorry, no information found.");
+            }
+          } else {
+            console.error("Error fetching data from Wikipedia:", data);
+            talk("Error fetching data from Wikipedia.");
+          }
+        } else {
+          console.error(
+            "No relevant search results found for the given transcript."
+          );
+          talk("Sorry, no information found.");
+        }
+      } else {
+        talk("Speech recognition result is empty.");
+      }
+    } catch (error) {
+      console.error("An unexpected error occurred:", error);
+      talk("An unexpected error occurred. Please try again later.");
+    }
   };
 
   const startListening = () => {
@@ -57,38 +419,285 @@ const Chat = () => {
       setTranscript(event.results[last][0].transcript);
 
       // const response = await fetch("http://127.0.0.1:8000/botly", {
-      const response = await fetch("https://botly-backend.onrender.com", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: event.results[last][0].transcript }),
-        mode: "cors",
-      });
+      // const response = await fetch("https://botly-backend.onrender.com/botly", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ text: event.results[last][0].transcript }),
+      //   mode: "cors",
+      // });
+      // const responseData = await response.json(); // Parse the JSON content
 
-      const responseData = await response.json(); // Parse the JSON content
+      if (
+        ["play", "song", "sing"].some((keyword) =>
+          event.results[last][0].transcript.includes(keyword)
+        )
+      ) {
+        const keyword = ["play", "song", "sing"].find((keyword) =>
+          event.results[last][0].transcript.includes(keyword)
+        );
+        const song = event.results[last][0].transcript
+          .replace(keyword, "")
+          .trim();
+        // Set the videoId for react-youtube player
+        talk(
+          `Unfortunately, am not yet able to play ${song} for you. Am sorry.`
+        );
+        return;
+      }
+      const keywords = [
+        "idea",
+        "describe",
+        "outline",
+        "state",
+        "distinguish",
+        "differentiate",
+        "illustrate",
+        "assess",
+        "classify",
+        "synthesize",
+        "derive",
+        "propose",
+        "construct",
+        "investigate",
+        "validate",
+        "synthesize",
+        "propose",
+        "argue",
+        "justify",
+        "types of",
+        "examples",
+        "determine",
+        "search",
+        "discuss",
+        "define",
+        "explain",
+        "interprete",
+        "elaborate",
+        "who is",
+        "what is",
+        "what are",
+        "where is",
+        "how is",
+        "how are",
+        "which",
+        "why",
+        "when",
+        "tell me about",
+        "details on",
+        "overview of",
+        "history of",
+        "background on",
+        "compare",
+        "contrast",
+        "analyze",
+        "evaluate",
+        "assess",
+        "critique",
+        "explore",
+        "examine",
+        "summarize",
+        "demonstrate",
+      ];
+      const forbiddenWords = [
+        "name",
+        "you",
+        "me",
+        "my",
+        "sister",
+        "kennedy",
+        "muhumuza",
+        "emmanuella",
+        "kopio",
+        "timothy",
+        "how are you",
+        "vanessa",
+        "vanesa",
+        "noble",
+        "kisembo",
+        "santrina",
+        "satrina",
+        "latrina",
+        "mummy",
+        "daddy",
+        "bed",
+        "triza",
+        "theresa",
+        "brother",
+        "kabamba",
+        "natonda",
+        "namitala",
+        "teresa",
+        "tereza",
+        "kopio",
+        "gift",
+        "emmanuella",
+        "kaducu",
+        "lagen",
+        "nasiima",
+        "komugisa",
+        "precious",
+        "ninsiima",
+        "timothy",
+      ];
+
+      if (
+        keywords.some((keyword) =>
+          event.results[last][0].transcript.toLowerCase().includes(keyword)
+        ) &&
+        !forbiddenWords.some((forbiddenWord) =>
+          event.results[last][0].transcript
+            .toLowerCase()
+            .includes(forbiddenWord)
+        )
+      ) {
+        // const transcript = event.results[last][0].transcript.trim();
+        const transcript = event.results[last][0].transcript;
+
+        if (transcript) {
+          searchWikiPedia(transcript);
+        }
+        return;
+      }
+
+      if (
+        ["time", "how are you by the sun"].some((keyword) =>
+          event.results[last][0].transcript.includes(keyword)
+        )
+      ) {
+        const time = getTime();
+        talk(`Current time is ${time}.`);
+        return;
+      }
+      if (
+        ["news", "latest", "whats new", "headlines"].some((keyword) =>
+          event.results[last][0].transcript.includes(keyword)
+        )
+      ) {
+        const news = getNews();
+        talk(news);
+        const dbMessages = {
+          id: uuidv4(),
+          user: event.results[last][0].transcript,
+          bot: news,
+          createdAt: new Date().getTime(),
+        };
+        const messageDataRef = doc(colletionRef, dbMessages.id);
+        await setDoc(messageDataRef, dbMessages);
+        const updatedMessages = [
+          ...messages,
+          {
+            id: uuidv4(),
+            bot: news,
+            user: event.results[last][0].transcript,
+          },
+        ];
+
+        setMessages(updatedMessages);
+        return;
+      }
+
+      if (
+        ["date", "today"].some((keyword) =>
+          event.results[last][0].transcript.includes(keyword)
+        )
+      ) {
+        const date = getDate();
+        talk(`The date today is ${date}.`);
+        return;
+      }
+
+      if (
+        ["weather", "forecast"].some((keyword) =>
+          event.results[last][0].transcript.includes(keyword)
+        )
+      ) {
+        // Extract the city from the command
+        const city = extractCity(event.results[last][0].transcript);
+
+        // Get weather information
+        const weatherData = await getWeather(city);
+
+        if (weatherData) {
+          // Extract relevant weather information
+          const temperature = weatherData.main.temp;
+          const description = weatherData.weather[0].description;
+
+          // Update state with weather information
+          talk(
+            `The current temperature in ${city} is ${temperature} degrees Celsius. ${description}.`
+          );
+          const dbMessages = {
+            id: uuidv4(),
+            user: event.results[last][0].transcript,
+            bot: `The current temperature in ${city} is ${temperature} degrees Celsius. ${description}.`,
+            createdAt: new Date().getTime(),
+          };
+          const messageDataRef = doc(colletionRef, dbMessages.id);
+          await setDoc(messageDataRef, dbMessages);
+          const updatedMessages = [
+            ...messages,
+            {
+              id: uuidv4(),
+              bot: `The current temperature in ${city} is ${temperature} degrees Celsius. ${description}.`,
+              user: event.results[last][0].transcript,
+            },
+          ];
+
+          setMessages(updatedMessages);
+          return;
+        } else {
+          talk(
+            "Sorry, I couldn't retrieve the weather information at the moment."
+          );
+          const dbMessages = {
+            id: uuidv4(),
+            user: event.results[last][0].transcript,
+            bot: "Sorry, I couldn't retrieve the weather information at the moment.",
+            createdAt: new Date().getTime(),
+          };
+          const messageDataRef = doc(colletionRef, dbMessages.id);
+          await setDoc(messageDataRef, dbMessages);
+          const updatedMessages = [
+            ...messages,
+            {
+              id: uuidv4(),
+              bot: "Sorry, I couldn't retrieve the weather information at the moment.",
+              user: event.results[last][0].transcript,
+            },
+          ];
+
+          setMessages(updatedMessages);
+          return;
+        }
+      }
+      const response = calculateResponse(event.results[last][0].transcript);
+
+      console.log("pass 1: after response");
 
       console.log("done");
-      if (response.status !== 200) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-      console.log("resonse:", responseData);
-      const botResponse = responseData.bot;
+      // if (response.status !== 200) {
+      //   throw new Error(`Error: ${response.statusText}`);
+      // }
+      console.log("resonse:", response);
+      // const botResponse = responseData.bot;
+      talk(response);
 
       const dbMessages = {
         id: uuidv4(),
         user: event.results[last][0].transcript,
-        bot: botResponse,
+        bot: response,
         createdAt: new Date().getTime(),
       };
-      // setTranscript(event.results[last][0].transcript);
+      setTranscript(event.results[last][0].transcript);
       const messageDataRef = doc(colletionRef, dbMessages.id);
       await setDoc(messageDataRef, dbMessages);
       const updatedMessages = [
         ...messages,
         {
           id: uuidv4(),
-          bot: botResponse,
+          bot: response,
           user: event.results[last][0].transcript,
         },
       ];
@@ -174,28 +783,254 @@ const Chat = () => {
 
     try {
       console.log("starting");
-      const response = await fetch("http://127.0.0.1:8000/botly", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: newMessage }),
-        mode: "cors",
-      });
+      // const response = await fetch("http://127.0.0.1:8000/botly", {
+      // const response = await fetch("https://botly-backend.onrender.com/botly", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ text: newMessage }),
+      //   mode: "cors",
+      // });
 
-      const responseData = await response.json(); // Parse the JSON content
+      // const responseData = await response.json(); // Parse the JSON content
+      if (
+        ["play", "song", "sing"].some((keyword) => newMessage.includes(keyword))
+      ) {
+        const keyword = ["play", "song", "sing"].find((keyword) =>
+          newMessage.includes(keyword)
+        );
+        const song = newMessage.replace(keyword, "").trim();
+
+        talk(
+          `Unfortunately, am not yet able to play ${song} for you. Am sorry.`
+        );
+        return;
+      }
+      if (
+        ["time", "how are you by the sun"].some((keyword) =>
+          newMessage.includes(keyword)
+        )
+      ) {
+        const time = getTime();
+        talk(`Current time is ${time}.`);
+        const dbMessages = {
+          id: uuidv4(),
+          user: newMessage,
+          bot: `Current time is ${time}.`,
+          createdAt: new Date().getTime(),
+        };
+        const updatedMessages = [
+          ...messages,
+          { id: uuidv4(), bot: `Current time is ${time}.`, user: newMessage },
+        ];
+        const messageDataRef = doc(colletionRef, dbMessages.id);
+        await setDoc(messageDataRef, dbMessages);
+        setMessages(updatedMessages);
+        return;
+      }
+
+      if (["date", "today"].some((keyword) => newMessage.includes(keyword))) {
+        const date = getDate();
+        talk(`The date today is ${date}.`);
+        const dbMessages = {
+          id: uuidv4(),
+          user: newMessage,
+          bot: `The date today is ${date}.`,
+          createdAt: new Date().getTime(),
+        };
+        const updatedMessages = [
+          ...messages,
+          { id: uuidv4(), bot: `The date today is ${date}.`, user: newMessage },
+        ];
+        const messageDataRef = doc(colletionRef, dbMessages.id);
+        await setDoc(messageDataRef, dbMessages);
+        setMessages(updatedMessages);
+        return;
+      }
+
+      const keywords = [
+        "idea",
+        "describe",
+        "outline",
+        "state",
+        "distinguish",
+        "differentiate",
+        "illustrate",
+        "assess",
+        "classify",
+        "synthesize",
+        "derive",
+        "propose",
+        "construct",
+        "investigate",
+        "validate",
+        "synthesize",
+        "propose",
+        "argue",
+        "justify",
+        "types of",
+        "examples",
+        "determine",
+        "search",
+        "discuss",
+        "define",
+        "explain",
+        "interprete",
+        "elaborate",
+        "who is",
+        "what is",
+        "what are",
+        "where is",
+        "how is",
+        "how are",
+        "which",
+        "why",
+        "when",
+        "tell me about",
+        "details on",
+        "overview of",
+        "history of",
+        "background on",
+        "compare",
+        "contrast",
+        "analyze",
+        "evaluate",
+        "assess",
+        "critique",
+        "explore",
+        "examine",
+        "summarize",
+        "demonstrate",
+      ];
+      const forbiddenWords = [
+        "name",
+        "you",
+        "me",
+        "my",
+        "sister",
+        "kennedy",
+        "muhumuza",
+        "emmanuella",
+        "kopio",
+        "timothy",
+        "how are you",
+        "vanessa",
+        "vanesa",
+        "noble",
+        "kisembo",
+        "santrina",
+        "satrina",
+        "latrina",
+        "mummy",
+        "daddy",
+        "bed",
+        "triza",
+        "theresa",
+        "brother",
+        "kabamba",
+        "natonda",
+        "namitala",
+        "teresa",
+        "tereza",
+        "kopio",
+        "gift",
+        "emmanuella",
+        "kaducu",
+        "lagen",
+        "nasiima",
+        "komugisa",
+        "precious",
+        "ninsiima",
+        "timothy",
+      ];
+
+      if (
+        keywords.some((keyword) =>
+          newMessage.toLowerCase().includes(keyword)
+        ) &&
+        !forbiddenWords.some((forbiddenWord) =>
+          newMessage.toLowerCase().includes(forbiddenWord)
+        )
+      ) {
+        // const transcript = event.results[last][0].transcript.trim();
+        // const transcript = event.results[last][0].transcript;
+
+        if (newMessage) {
+          searchWikiPedia(newMessage);
+        }
+        return;
+      }
+
+      if (
+        ["news", "latest", "whats new", "headlines"].some((keyword) =>
+          newMessage.includes(keyword)
+        )
+      ) {
+        const news = getNews();
+        talk(news);
+        const dbMessages = {
+          id: uuidv4(),
+          user: newMessage,
+          bot: news,
+          createdAt: new Date().getTime(),
+        };
+        const messageDataRef = doc(colletionRef, dbMessages.id);
+        await setDoc(messageDataRef, dbMessages);
+        const updatedMessages = [
+          ...messages,
+          {
+            id: uuidv4(),
+            bot: news,
+            user: newMessage,
+          },
+        ];
+
+        setMessages(updatedMessages);
+        return;
+      }
+
+      if (newMessage.includes("calculate") || newMessage.includes("solve")) {
+        const expression = newMessage.replace(/(calculate|solve)\s+/i, "");
+        try {
+          const result = eval(expression);
+
+          const botResponse = `The result of the calculation is ${result}`;
+          talk(botResponse);
+          const dbMessages = {
+            id: uuidv4(),
+            user: newMessage,
+            bot: botResponse,
+            createdAt: new Date().getTime(),
+          };
+          const updatedMessages = [
+            ...messages,
+            { id: uuidv4(), bot: botResponse, user: newMessage },
+          ];
+          const messageDataRef = doc(colletionRef, dbMessages.id);
+          await setDoc(messageDataRef, dbMessages);
+          setMessages(updatedMessages);
+          return;
+        } catch (error) {
+          talk(
+            "Sorry, I couldn't perform the calculation. Please check your expression."
+          );
+          return;
+        }
+      }
+      const response = calculateResponse(newMessage);
 
       console.log("done");
-      if (response.status !== 200) {
-        throw new Error(`Error: ${response.statusText}`);
-      }
-      console.log("resonse:", responseData);
-      const botResponse = responseData.bot;
-
+      // if (response.status !== 200) {
+      //   throw new Error(`Error: ${response.statusText}`);
+      // }
+      console.log("resonse:", response);
+      // const botResponse = responseData.bot;
+      talk(response);
       const dbMessages = {
         id: uuidv4(),
         user: newMessage,
-        bot: botResponse,
+        bot: response,
         createdAt: new Date().getTime(),
       };
 
@@ -211,7 +1046,7 @@ const Chat = () => {
 
       const updatedMessages = [
         ...messages,
-        { id: uuidv4(), bot: botResponse, user: newMessage },
+        { id: uuidv4(), bot: response, user: newMessage },
       ];
 
       const messageDataRef = doc(colletionRef, dbMessages.id);
@@ -254,6 +1089,16 @@ const Chat = () => {
     const formattedTime = `${hours}:${minutes} ${ampm}`;
     return formattedTime;
   }
+
+  // const opts = {
+  //   height: "390",
+  //   width: "640",
+  //   playerVars: {
+  //     autoplay: 1,
+  //   },
+  //   origin: "*",
+  //   // origin: window.location.origin, // Set the origin to the current window's origin
+  // };
 
   return (
     <div className={styles["chat-container"]}>
@@ -367,23 +1212,27 @@ const Chat = () => {
                   </div>
                 )}
                 {message?.bot && (
-                  <div className={styles["bot-container"]}>
-                    <span className={styles["bot-image"]}>
-                      <img
-                        src={ai}
-                        alt="ai_image"
-                        className={styles["bot-image"]}
-                      />
-                    </span>
-                    {/* <span className={styles["bot-image"]}>🤖</span> */}
-                    <div className={styles["bot-icon"]}>
-                      <span className={styles["bot-msg"]}>{message?.bot}</span>
-                      <span className={styles["time"]}>
-                        {convertIsoStringToCustomFormat(message?.createdAt)}
+                  <>
+                    <div className={styles["bot-container"]}>
+                      <span className={styles["bot-image"]}>
+                        <img
+                          src={ai}
+                          alt="ai_image"
+                          className={styles["bot-image"]}
+                        />
                       </span>
-                      {/* <span>{botResponse}</span> */}
+                      {/* <span className={styles["bot-image"]}>🤖</span> */}
+                      <div className={styles["bot-icon"]}>
+                        <span className={styles["bot-msg"]}>
+                          {message?.bot}
+                        </span>
+                        <span className={styles["time"]}>
+                          {convertIsoStringToCustomFormat(message?.createdAt)}
+                        </span>
+                        {/* <span>{botResponse}</span> */}
+                      </div>
                     </div>
-                  </div>
+                  </>
                 )}
 
                 {/* <div className="message-text">{message.text}</div> */}
@@ -430,23 +1279,27 @@ const Chat = () => {
                   </div>
                 )}
                 {message?.bot ? (
-                  <div className={styles["bot-container"]}>
-                    <span className={styles["bot-image"]}>
-                      <img
-                        src={ai}
-                        alt="ai_image"
-                        className={styles["bot-image"]}
-                      />
-                    </span>
-                    {/* <span className={styles["bot-image"]}>🤖</span> */}
-                    <div className={styles["bot-icon"]}>
-                      <span className={styles["bot-msg"]}>{message?.bot}</span>
-                      <span className={styles["time"]}>
-                        {convertIsoStringToCustomFormat(message?.createdAt)}
+                  <>
+                    <div className={styles["bot-container"]}>
+                      <span className={styles["bot-image"]}>
+                        <img
+                          src={ai}
+                          alt="ai_image"
+                          className={styles["bot-image"]}
+                        />
                       </span>
-                      {/* <span>{botResponse}</span> */}
+                      {/* <span className={styles["bot-image"]}>🤖</span> */}
+                      <div className={styles["bot-icon"]}>
+                        <span className={styles["bot-msg"]}>
+                          {message?.bot}
+                        </span>
+                        <span className={styles["time"]}>
+                          {convertIsoStringToCustomFormat(message?.createdAt)}
+                        </span>
+                        {/* <span>{botResponse}</span> */}
+                      </div>
                     </div>
-                  </div>
+                  </>
                 ) : null}
 
                 {/* <div className="message-text">{message.text}</div> */}

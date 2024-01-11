@@ -52,7 +52,7 @@ export const Gallery = () => {
   };
   const handlePrev = () => {
     const prev = (index - 1 + image.length) % image.length;
-    setActiveImage(image[prev]);
+    setActiveImage(image[prev]); 
   };
 
   useEffect(() => {
