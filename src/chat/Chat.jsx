@@ -339,6 +339,27 @@ const Chat = () => {
     return randomStrings[randomIndex];
   }
 
+  const introWords = [
+    "Hey there human, it's good to see you again. How may I help you today.",
+    "Hello dear, I'm happy to see you here. How are you doing?",
+    "Greetings, friend! Ready for some delightful conversation?",
+    "Hi! What's the latest scoop in your world?",
+    "Well, hello sunshine! What brings you to me today?",
+    "Ahoy there! What's the word on the street?",
+    "Bonjour! How's your day shaping up so far?",
+    "Greetings and salutations! What's on your mind?",
+    "Hey! Are you ready for some chatbot magic?",
+    "Hola amigo! What exciting tales do you have to share?",
+  ];
+  function getRandomIntroString() {
+    const randomIndex = Math.floor(Math.random() * introWords.length);
+    return introWords[randomIndex];
+  }
+
+  useEffect(() => {
+    const word = getRandomIntroString();
+    talk(word);
+  }, []);
   const searchWikiPedia = async (transcript) => {
     try {
       if (transcript) {
