@@ -396,10 +396,16 @@ const Chat = () => {
                 const info = pageData.extract;
 
                 if (info) {
+                  const sentences = info.split(/(?<=[.!?])\s+/);
+
+                  // Take the first two sentences
+                  const selectedInfo = sentences.slice(0, 2).join(" ");
+
+                  // const selectedString = getRandomString();
                   const selectedString = getRandomString();
                   talk(selectedString);
                   const selectedResultString = getRandomResultString();
-                  talk(`${selectedResultString} ${info}`);
+                  talk(`${selectedResultString} ${selectedInfo}`);
                 } else {
                   console.error("No information found:", data);
                   talk("Sorry, no information found.");
@@ -626,7 +632,7 @@ const Chat = () => {
       }
 
       if (
-        ["date", "today"].some((keyword) =>
+        ["date"].some((keyword) =>
           event.results[last][0].transcript.includes(keyword)
         )
       ) {
@@ -857,7 +863,7 @@ const Chat = () => {
         return;
       }
 
-      if (["date", "today"].some((keyword) => newMessage.includes(keyword))) {
+      if (["date"].some((keyword) => newMessage.includes(keyword))) {
         const date = getDate();
         talk(`The date today is ${date}.`);
         const dbMessages = {
