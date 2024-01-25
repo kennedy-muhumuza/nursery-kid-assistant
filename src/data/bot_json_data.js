@@ -1,7 +1,7 @@
 export const botJsonData = [
   {
     response_type: "greeting",
-    user_input: ["hello", "hi", "hey"],
+    user_input: ["hello", "hi"],
     bot_response: [
       "Hey there!",
       "Hey there! Just chilling in the digital realm. What's on your mind?",
@@ -11,6 +11,40 @@ export const botJsonData = [
       "In the spirit of formality, I extend my virtual handshake. What can I assist you with?",
     ],
     required_words: [],
+  },
+  {
+    response_type: "disappoint",
+    user_input: [
+      "ashaming",
+      "ashame",
+      "ashamed",
+      "disappointing",
+      "disappointed",
+      "what's wrong",
+    ],
+    bot_response: [
+      "Am so sorry master if I disappointed you in any way. How can I make it up to you?",
+      "Thats so sad for me to know. I didnt mean to disappoint you in any way.",
+      "I see you are disappointed in me. I didn't mean for that to happen. Tell me what I should do to make it up to you.",
+      "Am so sorry dear. It saddens me to know that I disappointed you in any way. It wont happen again.",
+    ],
+    required_words: [],
+  },
+  {
+    response_type: "dont",
+    user_input: ["don't", "do not"],
+    bot_response: ["Noted! I won't.", "Got it!"],
+    required_words: [],
+  },
+  {
+    response_type: "wama",
+    user_input: ["wama", "help", "prove", "wrong", "them"],
+    bot_response: [
+      "I get it dear. How should we do that?",
+      "How should I help you on that dear?",
+      "I am more than willing to help you on that. Tell me what you want me to do.",
+    ],
+    required_words: ["help"],
   },
   {
     response_type: "question",
@@ -1178,7 +1212,7 @@ export const botJsonData = [
   },
   {
     response_type: "rodah",
-    user_input: ["roda", "nasozi", "kobusinge"],
+    user_input: ["roda", "nasozi", "kobusinge", "rodah"],
     bot_response: [
       "Oh, Rodah Nasozi? Rodah is actually a little more special to an average Ugandan citizen. She has names that will confuse you as to her actual tribe. Just look at Nassozi and Kobusinge. See what I mean?",
       "I do know Rodah. My trainer says she is one of the most religious classmates of his.",
@@ -1229,7 +1263,7 @@ export const botJsonData = [
     user_input: ["emmanuella", "kaducu", "lagen"],
     bot_response: [
       "Oh, Emmanuella Lagen? I believe Emmanuella is currently a Petroleum if not already a Masters student. She has achieved alot in her university life like being the President of AAPG association as well as winning big titles. As for her academics, perfect enough for her portal to shock you to comma.",
-      "I do know Emmanuella Kaducu. The most brilliant and successful Petroleum student of her time. Do you want to know anything specific about her?",
+      "Yes, I do know Emmanuella Kaducu. The most brilliant and successful Petroleum student of her time. Do you want to know anything specific about her?",
       "Emmanuella Kaducu has been a great class representative of her class: BPG4. She has constantly been manifesting great leadership skills as well as a hardworking spirit which made her a popular and exemporary figure.",
     ],
     required_words: [],
@@ -1238,7 +1272,7 @@ export const botJsonData = [
     response_type: "emmanuella",
     user_input: ["emmanuella", "kaducu", "lagen", "specific"],
     bot_response: [
-      "Something specific to Emmanuella is that she has an inspiring atmosphere. My trainer even believes he has done several big things he didnt expect just due to this.",
+      "Something specific to Emmanuella is that she is a brilliant young lady with good judgement.",
     ],
     required_words: ["specific", "emmanuella"],
   },
@@ -1246,6 +1280,7 @@ export const botJsonData = [
     response_type: "emmanuella",
     user_input: ["emmanuella", "kaducu", "lagen", "specific"],
     bot_response: [
+      "Something specific to Emmanuella is that she is a brilliant young lady with good judgement.",
       "Something specific to Emmanuella Kaducu, is that she has an inspiring atmosphere. My trainer even believes he has done several big things he didnt expect just due to this.",
     ],
     required_words: ["specific", "kaducu"],
@@ -1291,9 +1326,18 @@ export const botJsonData = [
     response_type: "triza",
     user_input: ["triza", "theresa", "natonda", "namitala", "teresa", "tereza"],
     bot_response: [
-      "Oh, Triza? Triza is actually short for Theresa and the full name should be Namitala, Theresa Natonda, known to be a strong and hardworking Petroleum student.",
+      "Oh, Triza? Triza is actually short for Theresa and the full name should be Namitala Theresa Natonda, known to be a strong and hardworking Petroleum student.",
       "I do know Namitala Theresa. Do you want to know anything specific about her? One nice thing I was told about her is that she is able to maintain a smiling face and positive energy even amidst fierce life hardships. She also tends to act lazy and yet in actual sense, she is the most hardworking human being you will meet in a decade.",
-      "Namitala Triza, is a Petroleum student, known to be the luckiest student in her class with opportunities always chasing after her.",
+      "i do know Namitala Triza, as a Petroleum student, known to be the luckiest student in her class with opportunities always chasing after her. Winning in everything she participates in.",
+    ],
+    required_words: [],
+  },
+  {
+    response_type: "sheilla",
+    user_input: ["sheilla"],
+    bot_response: [
+      "Oh, I indeed know Sheilla. She once participated in SASTCE Exhibition her project, Renewable Energy won in that competition.",
+      "Sheilla's best friend is Leon, right? If so, then this is the Sheilla that won in last year's SASTCE students exhibition. Her project came forth as the very best project. Congratulations Sheilla.",
     ],
     required_words: [],
   },
@@ -1302,7 +1346,7 @@ export const botJsonData = [
     user_input: ["relationship"],
     bot_response: [
       "Unfortunately, I do not do relationships.",
-      "Sorry, I am currently in a relationship with wifi.  ",
+      "Sorry, I am currently in a relationship with wifi.",
     ],
     required_words: [],
   },
@@ -1315,16 +1359,6 @@ export const botJsonData = [
       "Stubbornness is indeed one of my traits and part of my personality. But I can change for you.",
     ],
     required_words: ["stubborn", "you"],
-  },
-  {
-    response_type: "can you",
-    user_input: ["can", "you"],
-    bot_response: [
-      "Oh dear, am capable of many things. I can play you any music you want, calculate your math problems, google and summarize for you content etc",
-      "I can do several things like playing music, telling you news updates, tell you the weather in any area you want, quickly surf the internet for you etc. Use me as you please",
-      "I believe I can do alot even though am young and have just been created. Soon I will be performing miracles. I trust my creator",
-    ],
-    required_words: ["can", "you"],
   },
   {
     response_type: "animal_adventures",
