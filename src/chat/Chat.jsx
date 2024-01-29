@@ -860,6 +860,8 @@ const Chat = () => {
         const messageDataRef = doc(colletionRef, dbMessages.id);
         await setDoc(messageDataRef, dbMessages);
         setMessages(updatedMessages);
+        setNewMessage("");
+
         return;
       }
 
@@ -879,6 +881,8 @@ const Chat = () => {
         const messageDataRef = doc(colletionRef, dbMessages.id);
         await setDoc(messageDataRef, dbMessages);
         setMessages(updatedMessages);
+        setNewMessage("");
+
         return;
       }
 
@@ -1050,6 +1054,8 @@ const Chat = () => {
           const messageDataRef = doc(colletionRef, dbMessages.id);
           await setDoc(messageDataRef, dbMessages);
           setMessages(updatedMessages);
+          setNewMessage("");
+
           return;
         } catch (error) {
           talk(

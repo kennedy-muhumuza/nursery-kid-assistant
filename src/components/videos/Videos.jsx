@@ -10,6 +10,24 @@ export const Videos = () => {
   const navigate = useNavigate();
 
   const videoList = [
+    { id: 25, title: "Colors", src: "/1an.mp4" },
+    { id: 26, title: "Dance", src: "/1dance.mp4" },
+    { id: 27, title: "Dance2", src: "/2an.mp4" },
+    { id: 28, title: "Cry", src: "/3an.mp4" },
+    { id: 29, title: "Kodi", src: "/4an.mp4" },
+    { id: 30, title: "Chipmunks", src: "/al1.mp4" },
+    { id: 31, title: "snacks", src: "/al2.mp4" },
+    { id: 32, title: "Alvin", src: "/al3.mp4" },
+    { id: 33, title: "Concert", src: "/al4.mp4" },
+    { id: 34, title: "Mango", src: "/al5.mp4" },
+    { id: 35, title: "Water", src: "/al6.mp4" },
+    { id: 36, title: "Plane", src: "/al7.mp4" },
+    { id: 37, title: "Wood", src: "/al8.mp4" },
+    { id: 38, title: "Compete", src: "/al9.mp4" },
+    { id: 39, title: "Stars", src: "/al10.mp4" },
+    { id: 40, title: "Smart", src: "/al11.mp4" },
+    { id: 41, title: "Cage", src: "/al12.mp4" },
+    { id: 42, title: "Sing", src: "/al13.mp4" },
     { id: 1, title: "Pepe", src: "/an1.mp4" },
     { id: 2, title: "Cat", src: "/an2.mp4" },
     { id: 3, title: "Snowy", src: "/an3.mp4" },
@@ -172,4 +190,3 @@ export const Videos = () => {
     </div>
   );
 };
- 

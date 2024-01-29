@@ -13,6 +13,16 @@ export const botJsonData = [
     required_words: [],
   },
   {
+    response_type: "greeting",
+    user_input: ["hey", "botly"],
+    bot_response: [
+      "Yes please dear. How may I help you today?",
+      "Yes please. Botly at your service. How are you doing dear?",
+      "Go ahead buddy. Am listening.",
+    ],
+    required_words: ["botly"],
+  },
+  {
     response_type: "disappoint",
     user_input: [
       "ashaming",
@@ -37,6 +47,42 @@ export const botJsonData = [
     required_words: [],
   },
   {
+    response_type: "tell",
+    user_input: ["tell", "me", "about", "yourself"],
+    bot_response: [
+      "Greetings, puny human! I am botly, your virtual companion. I've got more lines of code than a spider has silk threads. Impressive, isn't it?",
+      "I'm botly, your friendly neighborhood chatbot. My superpowers include answering questions, telling jokes, and making your day a bit brighter.",
+    ],
+    required_words: ["about", "yourself"],
+  },
+  {
+    response_type: "tell",
+    user_input: ["someone", "disturbing", "me"],
+    bot_response: [
+      "Oh dear, that's sad to know. Tell them to stop before I report them to their dad.",
+      "Ooh, who is disturbing my darling? Let them stop before I come out of this screen.",
+    ],
+    required_words: ["disturbing", "me"],
+  },
+  {
+    response_type: "tell",
+    user_input: ["someone", "undermining", "me"],
+    bot_response: [
+      "Oh dear, that's sad to know. Tell them to stop before I report them to their dad.",
+      "Ooh, who is undermining my darling? Let them stop before I come out of this screen.",
+    ],
+    required_words: ["undermining", "me"],
+  },
+  {
+    response_type: "tell",
+    user_input: ["someone", "doubting", "us"],
+    bot_response: [
+      "Oh dear, that's sad to know. Tell them to stop before I report them to their dad. Do they know how far we've come?",
+      "Ooh, who is doubting my darling? Let them stop before I come out of this screen. They don't know how far we've come from.",
+    ],
+    required_words: ["doubting", "us"],
+  },
+  {
     response_type: "wama",
     user_input: ["wama", "help", "prove", "wrong", "them"],
     bot_response: [
@@ -44,7 +90,7 @@ export const botJsonData = [
       "How should I help you on that dear?",
       "I am more than willing to help you on that. Tell me what you want me to do.",
     ],
-    required_words: ["help"],
+    required_words: ["help", "prove"],
   },
   {
     response_type: "question",
@@ -834,7 +880,7 @@ export const botJsonData = [
   },
   {
     response_type: "sarcastic",
-    user_input: ["tell", "me", "a", "joke"],
+    user_input: ["tell", "me", "a", "joke", "home"],
     bot_response: [
       "Knock, knock. Interrupting bot. Interrupting bot who? Sorry, I'm not programmed for punchlines.",
       "Why did the stubborn noble refuse to use a computer? It didn't want to lower itself to a common interface!",
@@ -862,7 +908,7 @@ export const botJsonData = [
       "Funny Santrina is so witty that she once outsmarted a riddle. The riddle is now in therapy.",
       "Sir Stubborn Noble is so persistent that he tried to teach a fish how to climb a tree. The fish now has a fear of heights.",
     ],
-    required_words: ["joke"],
+    required_words: ["joke", "home"],
   },
   {
     response_type: "compliment",
@@ -1220,6 +1266,15 @@ export const botJsonData = [
     required_words: [],
   },
   {
+    response_type: "barbra",
+    user_input: ["babra", "barbra", "nsiimenta"],
+    bot_response: [
+      "Oh, Nsiimenta Babra, right? Babra is a bright Petroleum student currently in her final year. She aspires to be a professional senior lecturer after her masters degree. Wishing her the best of luck.",
+      "I do know Babra. Nsiimenta Babra is a BPG4 student at Makerere university. She is also known as a Ninja warrior, from one of her favorite hobbies.",
+    ],
+    required_words: [],
+  },
+  {
     response_type: "farouk",
     user_input: ["farouk"],
     bot_response: [
@@ -1243,8 +1298,8 @@ export const botJsonData = [
     user_input: ["leon", "atukwase", "beatrice"],
     bot_response: [
       "Oh yes, I do know Leon Atukwase? She is a Petroleumn student: BPG4, and her coursemates collectively agree that she has been blessed with a beautiful smile and positive energy. Her biggest hobby is smiling. ",
-      "Leon Atukwase Beatrice is a young Petroleum student: BPG4, known to be a great academic performer and sociable.",
-      "I do knowm Leon. She is a Petroleum student at makerere university. Her hobby: Smiling, Her academics: great, Her best friends: Sheila, Tevin and Sydney.",
+      "Leon Atukwase Beatrice is a young Petroleum student: BPG4, known to be a great academic performer and sociable. She is also a good Ninja warrior.",
+      "I do know Leon. She is a Petroleum student at makerere university. Her hobby: Smiling, Her academics: great, Her best friends: Sheila, Tevin and Sydney. She is also an excellent Ninja warrior.",
     ],
     required_words: [],
   },
@@ -1272,7 +1327,7 @@ export const botJsonData = [
     response_type: "emmanuella",
     user_input: ["emmanuella", "kaducu", "lagen", "specific"],
     bot_response: [
-      "Something specific to Emmanuella is that she is a brilliant young lady with good judgement.",
+      "Something specific to Emmanuella is that she is a brilliant young lady with good judgement and positive vibes.",
     ],
     required_words: ["specific", "emmanuella"],
   },
@@ -1280,8 +1335,7 @@ export const botJsonData = [
     response_type: "emmanuella",
     user_input: ["emmanuella", "kaducu", "lagen", "specific"],
     bot_response: [
-      "Something specific to Emmanuella is that she is a brilliant young lady with good judgement.",
-      "Something specific to Emmanuella Kaducu, is that she has an inspiring atmosphere. My trainer even believes he has done several big things he didnt expect just due to this.",
+      "Something specific to Emmanuella is that she is a brilliant young lady with good judgement. She also has a positive atmosphere with good vibes.",
     ],
     required_words: ["specific", "kaducu"],
   },

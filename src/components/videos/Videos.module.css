@@ -20,7 +20,7 @@
 .video_title {
   text-align: center;
   color: #fff;
-}
+} 
 .video_item {
   border: 1px solid #ddd;
   padding: 10px;
@@ -35,7 +35,7 @@
 }
 
 .video_playing {
-  width: 70%;
+  width: 100%;
   height: auto;
 }
 .enjoy_msg {
